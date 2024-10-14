@@ -1,4 +1,8 @@
 # FCM-Puffin-prob_associazioni-Builder
+
+**-- il file ha dei problemi, stampa delle righe di doppioni --**
+ci sto lavorando...
+
 Script php per ricostruire da zero il file prob_associazioni.php per l'applicativo PuffinProbForm
 
 Lo script cerca nella pagina https://www.fantacalcio.it/probabili-formazioni-serie-a tutti i giocatori, ne recupera nome fantagazzetta, codice fantagazzetta e squadra di appartenenza. questi dati sono presenti nella URL di ogni giocatore che porta alla propria scheda.
