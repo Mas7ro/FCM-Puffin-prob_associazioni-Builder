@@ -1,7 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
 
+//io uso la vecchissima versione di revo, il cui database è caricato online su Mysql, si puo cambiare la connessione per interfacciarlo con l'mdb di FCM
 // Variabili per la connessione al database (da configurare)
 $host = "Database_Host";
 $username = "username";
@@ -20,17 +19,17 @@ try {
     echo "Errore durante la connessione: " . $e->getMessage();
 }
 
-// Carica il contenuto della pagina
+// Carica il contenuto della pagina, la pagina probabili formazioni è più completa
 //$url = 'https://www.fantacalcio.it/voti-fantacalcio-serie-a';
 $url = 'https://www.fantacalcio.it/probabili-formazioni-serie-a';
 $html = file_get_contents($url);
 
 // Crea un nuovo documento DOM
 $doc = new DOMDocument();
-libxml_use_internal_errors(true); // Supprime gli avvisi
+libxml_use_internal_errors(true); // Sopprime gli avvisi
 $doc->loadHTML($html);
 
-// Seleziona tutti gli elementi con la classe specificata
+// Seleziona tutti gli elementi con la classe specificata, nei link che sul sito portano alla scheda giocatore si trova sia il nome che il codice Fantacalcio.it
 $xpath = new DOMXPath($doc);
 $elements = $xpath->query('//a[@class="player-name player-link"]');
 
@@ -40,11 +39,10 @@ $giocatori = [];
 // Itera sugli elementi trovati
 foreach ($elements as $element) {
     $href = $element->getAttribute('href');
-    // Estrai gli ultimi 3 elementi del link (puoi personalizzare questa parte)
+    // Estrai gli ultimi 3 elementi del link squadra, nome e codice (puoi personalizzare questa parte)
     $parti = explode('/', $href);
     $squadra = $parti[count($parti) - 3];
     $nomeCompleto = $parti[count($parti) - 2];
-    //echo($nomeCompleto."<br>");
     // Rimuovi i trattini e le lettere successive SOLO se seguono una parola di più di 3 caratteri
     $nomeParti = explode('-', $nomeCompleto);
     $nome = '';
@@ -77,8 +75,6 @@ while ($row = $result->fetch_assoc()) {
 }
 
 // Confronto tra i giocatori dell'array e quelli del database (con ricerca parziale)
-//echo "<table>";
-//echo "<tr><th>Codice</th><th>Nome Array</th><th>Codice DB</th><th>Nome DB</th><th>Squadra</th></tr>";
 $conta=0;
 foreach ($giocatori as $cod => $giocatore) {
     
@@ -111,7 +107,5 @@ foreach ($giocatori as $cod => $giocatore) {
         echo "Giocatore {$giocatore['nome']} non trovato nel database (motivo: {$nomeCompleto})<br>";
     }
 }
-//echo "</table>";
-
 // Chiusura della connessione al database
 $conn->close();
