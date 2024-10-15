@@ -1,8 +1,9 @@
 # FCM-Puffin-prob_associazioni-Builder
 
-**-- il file ha dei problemi, stampa delle righe di doppioni --**
-ci sto lavorando...
 
+***Per gestire più velocemente i duplicati che vengono dai cicli, mi faccio stampare le query per popolare una' altra tabella, che vado a leggere con una DISTINCT per crearmi l'elenco da copincollare nel prob_associazioni. Questo lo faccio col file selectdistinct.php,  volendo si potrebbe integrare il tutto su un unico file.***
+
+---
 Script php per ricostruire da zero il file prob_associazioni.php per l'applicativo PuffinProbForm
 
 Lo script cerca nella pagina https://www.fantacalcio.it/probabili-formazioni-serie-a tutti i giocatori, ne recupera nome fantagazzetta, codice fantagazzetta e squadra di appartenenza. questi dati sono presenti nella URL di ogni giocatore che porta alla propria scheda.
