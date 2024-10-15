@@ -2,7 +2,8 @@
 # FCM-Puffin-prob_associazioni-Builder
 
 
-***Per gestire più velocemente i duplicati che vengono dai cicli, mi faccio stampare le query per popolare una' altra tabella, che vado a leggere con una DISTINCT per crearmi l'elenco da copincollare nel prob_associazioni. Questo lo faccio col file selectdistinct.php,  volendo si potrebbe integrare il tutto su un unico file. CREDO CI SIA ANCORA QUALCHE PROBLEMA, NON SONO SICURO DELLA PRECISIONE DEGLI SCRIPT***
+**puffin_prob_associazioni_buider.php** e **selectdistinc.php** ricostruiscono il file **prob_associazioni.php** che serve a scaricare le propabiltà di titolarità dei calciatori di serie A nel plugin di FantaCalcioManager **PuffinProbForm**
+**CREDO CI SIA ANCORA QUALCHE PROBLEMA, NON SONO SICURO DELLA PRECISIONE DEGLI SCRIPT**
 
 ---
 Script php per ricostruire da zero il file **prob_associazioni.php** per l'applicativo **PuffinProbForm**
