@@ -81,9 +81,12 @@ while ($row = $result->fetch_assoc()) {
 
 $conta=0;
 
+// Array per memorizzare le combinazioni già trovate
+$giocatoriTrovati = [];
+
 foreach ($giocatori as $cod => $giocatore) {
     $nomeCompleto = trim($giocatore['nome']);
-    //$nomeCompletoMaiuscolo = strtoupper($nomeCompleto); // Converti tutto in maiuscolo per semplificare la ricerca
+    $squadraGiocatore = $giocatore['squadra'];
 
     $trovato = false;
 
@@ -93,20 +96,31 @@ foreach ($giocatori as $cod => $giocatore) {
 
         foreach ($giocatoriDB as $nomeDB => $datiGiocatore) {
             // Estrai solo la parte maiuscola del nome dal database
-            preg_match('/^\w+/', $nomeDB, $cognomeDB);// Rimuove tutte le parole in minuscolo
-            $cognomeDB = implode($cognomeDB);;
-            //echo("<br>");
-            if (stripos($cognomeDB, $nomeParzialeMaiuscolo) !== false) {
-                // Trovata corrispondenza sul cognome
-                //echo ("\$arrAssociazioni[{$conta}]=array({$giocatore['codice']},\"".ucfirst(trim($giocatore['nome']))."\",{$datiGiocatore['Cod']},\"{$datiGiocatore['Giocatore']}\",\"{$datiGiocatore['Squadra']}\"");
-                //adasd');
-                echo ("INSERT INTO `test`.`test` (`testo`) VALUES ('array({$giocatore['codice']},\"".ucfirst(trim($giocatore['nome']))."\",{$datiGiocatore['Cod']},\"{$datiGiocatore['Giocatore']}\",\"{$datiGiocatore['Squadra']}\"");
-                echo");');<br>";
-                //Per gestire più velocemente i duplicati che fuoriescono dai cicli, mi faccio stampare le query per popolare una' altra tabella, che vado a leggere con una DISTINCT
-                //che lancio col file selectdistinct.php, volendo si potrebbe integrare il tutto su un unico file
-                $conta ++;
+            preg_match('/^\w+/', $nomeDB, $cognomeDB);
+            $cognomeDB = implode($cognomeDB);
+
+            // Verifica sia il nome che la squadra
+            if (stripos($cognomeDB, $nomeParzialeMaiuscolo) !== false 
+                && stripos($datiGiocatore['Squadra'], $squadraGiocatore) !== false) {
+                
+                // Crea una chiave unica combinando nome e squadra
+                $chiaveUnica = $giocatore['codice'] . '_' . $datiGiocatore['Cod'];
+
+                // Verifica se la combinazione è già stata trovata
+                if (!in_array($chiaveUnica, $giocatoriTrovati)) {
+                    // Aggiungi la combinazione all'array
+                    $giocatoriTrovati[] = $chiaveUnica;
+
+                    // Stampa il risultato
+                    // echo ("INSERT INTO `test`.`test` (`testo`) VALUES ('array({$giocatore['codice']},\"".ucfirst(trim($giocatore['nome']))."\",{$datiGiocatore['Cod']},\"{$datiGiocatore['Giocatore']}\",\"{$datiGiocatore['Squadra']}\"");
+                    // echo ");');<br>";
+                    echo ("\$arrAssociazioni[{$conta}]=array({$giocatore['codice']},\"".ucfirst(trim($giocatore['nome']))."\",{$datiGiocatore['Cod']},\"{$datiGiocatore['Giocatore']}\",\"{$datiGiocatore['Squadra']}\"");
+                    echo");<br>";
+
+                    $conta++;
+                }
                 $trovato = true;
-                break 2;
+                break 2; // Esci da entrambi i cicli se troviamo una corrispondenza
             }
         }
 
@@ -116,10 +130,11 @@ foreach ($giocatori as $cod => $giocatore) {
     }
 
     if (!$trovato) {
-        echo "Giocatore {$giocatore['nome']} non trovato nel database (motivo: {$nomeCompleto})<br>";
+        echo "Giocatore {$giocatore['nome']} (Squadra: {$squadraGiocatore}) non trovato nel database (motivo: {$nomeCompleto})<br>";
     }
 }
 //echo "</table>";
 
 // Chiusura della connessione al database
 $conn->close();
+
