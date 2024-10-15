@@ -1,7 +1,7 @@
 # FCM-Puffin-prob_associazioni-Builder
 
 
-**puffin_prob_associazioni_buider.php** e **selectdistinc.php** ricostruiscono il file **prob_associazioni.php** che serve a scaricare le propabiltà di titolarità dei calciatori di serie A nel plugin di FantaCalcioManager **PuffinProbForm**
+**puffin_prob_associazioni_buider.php** ricostruisce il contenuto del file **prob_associazioni.php** che serve a scaricare le propabiltà di titolarità dei calciatori di serie A nel plugin di FantaCalcioManager **PuffinProbForm**
 **CREDO CI SIA ANCORA QUALCHE PROBLEMA, NON SONO SICURO DELLA PRECISIONE DEGLI SCRIPT**
 
 ---
