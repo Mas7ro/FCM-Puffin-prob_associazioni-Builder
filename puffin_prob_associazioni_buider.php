@@ -19,17 +19,17 @@ try {
     echo "Errore durante la connessione: " . $e->getMessage();
 }
 
-// Carica il contenuto della pagina, la pagina probabili formazioni è più completa
+// Carica il contenuto della pagina
 //$url = 'https://www.fantacalcio.it/voti-fantacalcio-serie-a';
 $url = 'https://www.fantacalcio.it/probabili-formazioni-serie-a';
 $html = file_get_contents($url);
 
 // Crea un nuovo documento DOM
 $doc = new DOMDocument();
-libxml_use_internal_errors(true); // Sopprime gli avvisi
+libxml_use_internal_errors(true); // Supprime gli avvisi
 $doc->loadHTML($html);
 
-// Seleziona tutti gli elementi con la classe specificata, nei link che sul sito portano alla scheda giocatore si trova sia il nome che il codice Fantacalcio.it
+// Seleziona tutti gli elementi con la classe specificata
 $xpath = new DOMXPath($doc);
 $elements = $xpath->query('//a[@class="player-name player-link"]');
 
@@ -39,10 +39,11 @@ $giocatori = [];
 // Itera sugli elementi trovati
 foreach ($elements as $element) {
     $href = $element->getAttribute('href');
-    // Estrai gli ultimi 3 elementi del link squadra, nome e codice (puoi personalizzare questa parte)
+    // Estrai gli ultimi 3 elementi del link (puoi personalizzare questa parte)
     $parti = explode('/', $href);
     $squadra = $parti[count($parti) - 3];
     $nomeCompleto = $parti[count($parti) - 2];
+    //echo($nomeCompleto."<br>");
     // Rimuovi i trattini e le lettere successive SOLO se seguono una parola di più di 3 caratteri
     $nomeParti = explode('-', $nomeCompleto);
     $nome = '';
@@ -75,31 +76,42 @@ while ($row = $result->fetch_assoc()) {
 }
 
 // Confronto tra i giocatori dell'array e quelli del database (con ricerca parziale)
+// echo "// Array per associare il nome e i codici del giocatore su FantaGazzetta con il nome e i codici in FCM
+// // \$arrAssociazioni[0]=array(codice FantaGazzetta,\"nome FantaGazzetta\",codice FCM,\"nome FCM\");<br>";
+
 $conta=0;
+
 foreach ($giocatori as $cod => $giocatore) {
-    
-    $nomeCompleto = trim($giocatore['nome']); // Rimuovi spazi iniziali e finali
+    $nomeCompleto = trim($giocatore['nome']);
+    //$nomeCompletoMaiuscolo = strtoupper($nomeCompleto); // Converti tutto in maiuscolo per semplificare la ricerca
+
     $trovato = false;
 
     // Iniziamo dalla stringa completa e accorciamo progressivamente
     for ($i = strlen($nomeCompleto); $i > 0; $i--) {
-        $nomeParziale = substr($nomeCompleto, 0, $i);
-        $searchPattern = "{$nomeParziale}";
+        $nomeParzialeMaiuscolo = substr($nomeCompleto, 0, $i);
 
         foreach ($giocatoriDB as $nomeDB => $datiGiocatore) {
-
-            if (stripos(trim($nomeDB), $searchPattern) !== false) { // Rimuovi spazi anche nel nome del DB
-                
-                echo ("\$arrAssociazioni[{$conta}]=array({$giocatore['codice']},\"".ucfirst(trim($giocatore['nome']))."\",{$datiGiocatore['Cod']},\"{$datiGiocatore['Giocatore']}\",\"{$datiGiocatore['Squadra']}\"");
-                echo");<br>";
+            // Estrai solo la parte maiuscola del nome dal database
+            preg_match('/^\w+/', $nomeDB, $cognomeDB);// Rimuove tutte le parole in minuscolo
+            $cognomeDB = implode($cognomeDB);;
+            //echo("<br>");
+            if (stripos($cognomeDB, $nomeParzialeMaiuscolo) !== false) {
+                // Trovata corrispondenza sul cognome
+                //echo ("\$arrAssociazioni[{$conta}]=array({$giocatore['codice']},\"".ucfirst(trim($giocatore['nome']))."\",{$datiGiocatore['Cod']},\"{$datiGiocatore['Giocatore']}\",\"{$datiGiocatore['Squadra']}\"");
+                //adasd');
+                echo ("INSERT INTO `test`.`test` (`testo`) VALUES ('array({$giocatore['codice']},\"".ucfirst(trim($giocatore['nome']))."\",{$datiGiocatore['Cod']},\"{$datiGiocatore['Giocatore']}\",\"{$datiGiocatore['Squadra']}\"");
+                echo");');<br>";
+                //Per gestire più velocemente i duplicati che fuoriescono dai cicli, mi faccio stampare le query per popolare una' altra tabella, che vado a leggere con una DISTINCT
+                //che lancio col file selectdistinct.php, volendo si potrebbe integrare il tutto su un unico file
                 $conta ++;
                 $trovato = true;
-                break 2; // Esci da entrambi i cicli se troviamo una corrispondenza
+                break 2;
             }
         }
 
         if ($trovato) {
-            break; // Esci dal ciclo esterno se abbiamo trovato una corrispondenza
+            break;
         }
     }
 
@@ -107,5 +119,7 @@ foreach ($giocatori as $cod => $giocatore) {
         echo "Giocatore {$giocatore['nome']} non trovato nel database (motivo: {$nomeCompleto})<br>";
     }
 }
+//echo "</table>";
+
 // Chiusura della connessione al database
 $conn->close();
