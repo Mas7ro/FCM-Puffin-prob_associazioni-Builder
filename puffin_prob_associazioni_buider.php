@@ -1,6 +1,7 @@
 <?php
 
-//io uso la vecchissima versione di revo, il cui database è caricato online su Mysql, si puo cambiare la connessione per interfacciarlo con l'mdb di FCM
+//io uso la vecchissima versione di revo, il cui database è caricato online su Mysql, 
+//si puo cambiare la connessione per interfacciarlo con l'mdb di FCM
 // Variabili per la connessione al database (da configurare)
 $host = "Database_Host";
 $username = "username";
