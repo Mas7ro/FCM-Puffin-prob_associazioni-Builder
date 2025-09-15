@@ -23,7 +23,29 @@ try {
 // Carica il contenuto della pagina
 //$url = 'https://www.fantacalcio.it/voti-fantacalcio-serie-a';
 $url = 'https://www.fantacalcio.it/probabili-formazioni-serie-a';
-$html = file_get_contents($url);
+
+// Recupero contenuto con cURL
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($ch, CURLOPT_USERAGENT,
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) ".
+    "AppleWebKit/537.36 (KHTML, like Gecko) ".
+    "Chrome/127.0.0.0 Safari/537.36"
+);
+
+$html = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    die("Errore cURL: " . curl_error($ch));
+}
+
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+if ($httpcode !== 200) {
+    die("Richiesta fallita. Codice HTTP: $httpcode");
+}
 
 // Crea un nuovo documento DOM
 $doc = new DOMDocument();
