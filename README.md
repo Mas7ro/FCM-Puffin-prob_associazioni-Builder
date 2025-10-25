@@ -19,4 +19,4 @@ Successivamente carica l'elenco di tutti i giocatori presenti nel db di FCM (usa
  - CREDO CI SIA ANCORA QUALCHE PROBLEMA, NON SONO SICURO DELLA PRECISIONE DEGLI SCRIPT
 
 ## Aggiornamento 20-9-2025
-C'è sicuramente qualche problema, questanno c'erano 6 giocatori che prendeva, e sicuramente ci sono problemi con gli apici ed i nomi composti, li ho corretti a mano, NON HO migliorato il codice.
+C'è sicuramente qualche problema, questanno c'erano 6 giocatori che non prendeva, e sicuramente ci sono problemi con gli apici ed i nomi composti, li ho corretti a mano, NON HO migliorato il codice.
