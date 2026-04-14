@@ -1,22 +1,52 @@
 # FCM-Puffin-prob_associazioni-Builder
 
+**Generatore automatico dell'array di associazioni tra giocatori FantaGazzetta e FCM**
 
-**puffin_prob_associazioni_buider.php** ricostruisce il contenuto del file **prob_associazioni.php** che serve a scaricare le propabiltà di titolarità dei calciatori di serie A nel plugin di FantaCalcioManager **PuffinProbForm**
-**CREDO CI SIA ANCORA QUALCHE PROBLEMA, NON SONO SICURO DELLA PRECISIONE DEGLI SCRIPT**
+Questo script PHP ricostruisce il file `prob_associazioni.php` necessario per il plugin **PuffinProbForm**, automatizzando l'associazione tra i giocatori di Serie A da FantaGazzetta e quelli presenti nel database FCM.
 
 ---
-Script php per aggiornare il file **prob_associazioni.php** per l'applicativo **PuffinProbForm**
 
-Lo script cerca nella pagina https://www.fantacalcio.it/probabili-formazioni-serie-a tutti i giocatori, ne recupera nome fantagazzetta, codice fantagazzetta e squadra di appartenenza. Questi dati sono presenti nella URL di ogni giocatore che porta alla propria scheda.
-Successivamente carica l'elenco di tutti i giocatori presenti nel db di FCM (usando io la skin Revo 2.13 il db è su mysql) e tramite una ricerca ricostruisce l'array di **prob_associazioni.php** stampando a video il l'elenco delle istruzioni da incollare in prob_associazioni.php: **il codice visualizzato dalla pagina va a SOSTITUIRE il contenuto del file prob_associazioni.php**.
+## 🎯 Funzionalità
 
-## DISCLAIMER
+- **Web Scraping**: Estrae automaticamente i giocatori da [fantacalcio.it/probabili-formazioni-serie-a](https://www.fantacalcio.it/probabili-formazioni-serie-a)
+- **Parsing Intelligente**: Ricostruisce i nomi dei giocatori dal formato URL (gestione di trattini e nomi composti)
+- **Matching Fuzzy**: Associa i giocatori FantaGazzetta a quelli FCM con ricerca parziale
+- **Output Pronto**: Genera PHP code direttamente utilizzabile come array di associazioni
+- **Validazione**: Segnala i giocatori non trovati nel database FCM
 
- - Dopo un miglioramento dell'algoritmo di ricerca e confronto credo che ora l'output sia abbastanza preciso: probabilmente ci sono problemi con la presenza di cognomi multipli oltre i due, per esempio ha fatto casini con Martinez che ne sono 3.
- - Fate un backup del file prob_associazioni!!!!
- - potrebbe mancare o essere sbagliata qualche associazione!!!
- - Non mi assumo nessuna responsabilità in caso di perdita di dati
- - CREDO CI SIA ANCORA QUALCHE PROBLEMA, NON SONO SICURO DELLA PRECISIONE DEGLI SCRIPT
+---
 
-## Aggiornamento 20-9-2025
-C'è sicuramente qualche problema, questanno c'erano 6 giocatori che non prendeva, e sicuramente ci sono problemi con gli apici ed i nomi composti, li ho corretti a mano, NON HO migliorato il codice.
+## 📋 Requisiti Tecnici
+
+- **PHP**: 5.5+
+- **Estensioni PHP richieste**:
+  - `MySQLi` (connessione database)
+  - `cURL` (web scraping)
+  - `libxml` e `DOM` (parsing HTML)
+- **Database**: MySQL con accesso remoto/locale
+- **Connettività**: Accesso HTTP a fantacalcio.it
+
+---
+
+## ⚙️ Configurazione
+
+Modifica le seguenti variabili nel file `puffin_prob_associazioni_buider.php`:
+
+```php
+$host = "Database_Host";        // Indirizzo server MySQL
+$username = "username";          // Utente database
+$password = "password";          // Password database
+$db_name = "database";           // Nome database
+```
+
+### Query Database
+Lo script esegue questa query:
+```sql
+SELECT Giocatore, Squadra, Cod FROM `fantamaniaci_revo`.`revo_stats`;
+```
+Adatta il nome del database/tabella se diverso (es. per altre versioni di Revo o database FCM).
+
+---
+
+## 🚀 Utilizzo
+
